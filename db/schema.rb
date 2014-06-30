@@ -14,13 +14,14 @@
 ActiveRecord::Schema.define(version: 20140629055323) do
 
   create_table "articles", force: true do |t|
-    t.integer  "user_id",                                       null: false
-    t.string   "title",              limit: 100,                null: false
-    t.text     "body",                                          null: false
+    t.integer  "user_id",                                        null: false
+    t.string   "title",              limit: 100,                 null: false
+    t.text     "body",                                           null: false
     t.boolean  "is_public_editable",             default: true
+    t.boolean  "is_private",                     default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "comments_count",                 default: 0,    null: false
+    t.integer  "comments_count",                 default: 0,     null: false
     t.integer  "lock_version",                   default: 0
   end
 
@@ -67,7 +68,6 @@ ActiveRecord::Schema.define(version: 20140629055323) do
     t.datetime "updated_at"
   end
 
-  add_index "notifications", ["article_id"], name: "notifications_article_id_fk", using: :btree
   add_index "notifications", ["user_id"], name: "index_notifications_on_user_id", using: :btree
 
   create_table "stocks", force: true do |t|
@@ -130,6 +130,8 @@ ActiveRecord::Schema.define(version: 20140629055323) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
@@ -137,26 +139,9 @@ ActiveRecord::Schema.define(version: 20140629055323) do
     t.integer  "failed_attempts",        default: 0, null: false
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-
-  add_foreign_key "articles", "users", name: "articles_user_id_fk", dependent: :delete
-
-  add_foreign_key "following_tags", "users", name: "following_tags_user_id_fk", dependent: :delete
-
-  add_foreign_key "notification_targets", "notifications", name: "notification_targets_notification_id_fk", dependent: :delete
-  add_foreign_key "notification_targets", "users", name: "notification_targets_user_id_fk", dependent: :delete
-
-  add_foreign_key "notifications", "articles", name: "notifications_article_id_fk", dependent: :delete
-  add_foreign_key "notifications", "users", name: "notifications_user_id_fk", dependent: :delete
-
-  add_foreign_key "stocks", "articles", name: "stocks_article_id_fk", dependent: :delete
-  add_foreign_key "stocks", "users", name: "stocks_user_id_fk", dependent: :delete
-
-  add_foreign_key "update_histories", "articles", name: "update_histories_article_id_fk", dependent: :delete
 
 end
