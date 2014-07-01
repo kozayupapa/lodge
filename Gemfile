@@ -67,9 +67,9 @@ database_file = File.join(File.dirname(__FILE__), "config/database.yml")
 if File.exist?(database_file)
   database_config = YAML::load(ERB.new(IO.read(database_file)).result)
   adapter = nil
-  if ! database_config["production"].nil  then
+  if database_config.include?("production")  then
     adapter = database_config["production"]["adapter"]
-  elsif ! database_config["development"].nil  then
+  elsif  database_config.include?("development")  then
     adapter = database_config["development"]["adapter"]
   end
   
