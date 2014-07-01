@@ -78,7 +78,8 @@ if File.exist?(database_file)
     when /sqlite3/
       gem "sqlite3"
     else
-      warn("Unknown database adapter `#{adapter}` found in config/database.yml")
+      gem "mysql2"
+      warn("temporary add mysql2 Unknown database adapter `#{adapter}` found in config/database.yml")
     end
   else
     warn("No adapter found in config/database.yml, please configure it first")
