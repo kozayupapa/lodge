@@ -67,16 +67,12 @@ database_file = File.join(File.dirname(__FILE__), "config/database.yml")
 if File.exist?(database_file)
   database_config = YAML::load(ERB.new(IO.read(database_file)).result)
   adapter = nil
-  group :development do
+  if ! database_config["production"].nil  then
+    adapter = database_config["production"]["adapter"]
+  elsif ! database_config["development"].nil  then
     adapter = database_config["development"]["adapter"]
   end
-  group :test do
-    adapter = database_config["test"]["adapter"]
-  end
-  group :production do
-    adapter = database_config["production"]["adapter"]
-  end
-
+  
   unless adapter.nil?
     case adapter
     when 'mysql2'
