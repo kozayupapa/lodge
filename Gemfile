@@ -66,7 +66,17 @@ require 'yaml'
 database_file = File.join(File.dirname(__FILE__), "config/database.yml")
 if File.exist?(database_file)
   database_config = YAML::load(ERB.new(IO.read(database_file)).result)
-  adapter = database_config["default"]["adapter"]
+  adapter = nil
+  group :development do
+    adapter = database_config["development"]["adapter"]
+  end
+  group :test do
+    adapter = database_config["test"]["adapter"]
+  end
+  group :production do
+    adapter = database_config["production"]["adapter"]
+  end
+
   unless adapter.nil?
     case adapter
     when 'mysql2'
@@ -78,8 +88,7 @@ if File.exist?(database_file)
     when /sqlite3/
       gem "sqlite3"
     else
-      gem "mysql2"
-      warn("temporary add mysql2 Unknown database adapter `#{adapter}` found in config/database.yml")
+      warn("mysql2 Unknown database adapter `#{adapter}` found in config/database.yml")
     end
   else
     warn("No adapter found in config/database.yml, please configure it first")
